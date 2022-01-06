@@ -14,6 +14,9 @@ class LumosDetector:
     accumulated_frame = self.processor.Accumulate(frame_thresholded)
     circles = self.circle_detector.DetectCircles(accumulated_frame)
     if np.any(circles):
-      return self.circle_detector.SelectDominantCircle(accumulated_frame, circles)
-    else:
-      return None
+      dominant_circle = self.circle_detector.SelectDominantCircle(accumulated_frame, circles)
+      radius = dominant_circle[2]
+      num_inliers = len(self.circle_detector.CircleInliers(accumulated_frame, dominant_circle))
+      if num_inliers > 10 / radius:
+        return dominant_circle
+    return None
