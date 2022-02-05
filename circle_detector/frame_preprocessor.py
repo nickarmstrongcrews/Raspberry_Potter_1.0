@@ -2,16 +2,19 @@ import cv2 as cv
 import numpy as np
 
 class FramePreprocessor:
+  '''Do stuff to frames in preparation for shape matching.'''
   def __init__(self):
     self.accumulated_frame = None
     self.num_frames = 0
 
   def Threshold(self, frame):
+    '''Input color frame, output binary frame. Uses hard-coded threshold.'''
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     ret,frame_binary = cv.threshold(frame_gray,250,255,cv.THRESH_BINARY)
     return frame_binary
 
   def Accumulate(self, frame):
+    '''Adds a frame into the accumulation.'''
     if not np.any(self.accumulated_frame):
       self.accumulated_frame = frame
     else:

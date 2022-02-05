@@ -10,9 +10,9 @@ class CircleDetector:
                                 param1=50,param2=30,minRadius=min_radius,maxRadius=max_radius)
     return circles
 
-  def CirclePoints(self, img, circle):
+  def CirclePoints(self, height, width, circle):
+    '''Return a list of all the pixel coords comprising the circle (ignoring pixel contents; the circle is complete)'''
     x_c, y_c, radius = circle[0:3]
-    height, width = img.shape[0:2]
     th = np.arange(0, 2*np.pi, 0.1)
     x = x_c + radius * np.cos(th)
     y = y_c + radius * np.sin(th)
@@ -21,6 +21,7 @@ class CircleDetector:
     return list(zip(np.uint16(np.around(x)), np.uint16(np.around(y))))
 
   def CircleInliers(self, distilled_image, circle):
+    '''Return a list of pixel coords that have high enough values are close enough to the circle.'''
     assert len(distilled_image.shape) == 2
     DIST_THRESHOLD = 10 # in pixels
     GRAY_PIXEL_THRESHOLD = 150
@@ -43,17 +44,21 @@ class CircleDetector:
     return inliers
 
   def _angular_distance(self, th1, th2, wrap_interval=2*np.pi):
+    '''Return the angular distance between th1 and th2 (which must be within 2*pi of each other); output is in [0, pi].'''
     a, b = min(th1, th2), max(th1, th2)
     return np.min((abs(b-a), abs(b-a-wrap_interval)))
 
   def InliersArcLength(self, circle, inliers):
+    '''Considering the inliers in polar coords, returns the arc length in radians.'''
     x_c, y_c, radius = circle[0:3]
     arc_length = 0.0
     last_th = None
+    # note: assumes inliers are in order
     for (x, y) in inliers:
       th = np.arctan2(y-y_c, x-x_c)
       dth = self._angular_distance(last_th-th) if last_th else 0
       last_th = th
+      # integrate up to avoid wraparound issues
       arc_length += dth
     return arc_length
 
@@ -62,7 +67,7 @@ class CircleDetector:
     if len(circle) == 4:
       return circle[3]
     score = 0.0
-    circle_points = self.CirclePoints(distilled_image, circle)
+    circle_points = self.CirclePoints(distilled_image.shape[0], distilled_image.shape[1], circle)
     n = len(circle_points)
     for (x, y) in circle_points:
       #score += distilled_image[x, y]
@@ -90,7 +95,7 @@ class CircleDetector:
     cv.circle(out_img,(i[0],i[1]),2,(0,0,255),3)
     # draw the inliers
     for (x, y) in self.CircleInliers(gray_image, i):
-    #for (x, y) in self.CirclePoints(out_img, i): # draw the individual points in the circle
+    #for (x, y) in self.CirclePoints(out_img.shape[0], out_img.shape[1], i): # draw the individual points in the circle
       cv.circle(out_img, (x,y), radius=2, color=(255, 0, 0), thickness=-1)
     return out_img
 
@@ -105,6 +110,6 @@ class CircleDetector:
       cv.circle(out_img,(i[0],i[1]),2,(0,0,255),3)
       # draw the inliers
       #for (x, y) in self.CircleInliers(gray_image, i):
-      #for (x, y) in self.CirclePoints(out_img, i): # draw the individual points in the circle
+      #for (x, y) in self.CirclePoints(out_img.shape[0], out_img.shape[1], i): # draw the individual points in the circle
       #  cv.circle(out_img, (x,y), radius=2, color=(255, 0, 0), thickness=-1)
     return out_img
