@@ -3,8 +3,7 @@ import numpy as np
 from playsound import playsound
 from lumos_detector import LumosDetector
 
-# this is /dev/videoX; you can query these with `v4l2-ctl -d /dev/video5 --list-formats`
-WEBCAM_INDEX = 4 # Nick's laptop
+WEBCAM_INDEX = 0 # Nick's laptop; see camera_test.py if not working.
 
 # define a video capture object
 vid = cv.VideoCapture(WEBCAM_INDEX)

@@ -4,12 +4,13 @@ from frame_preprocessor import FramePreprocessor
 
 
 class LumosDetector:
+  '''Top-level detector. Thresholds frames, accumulates frames, detects dominant circle, checks if it is good enough.'''
   def __init__(self):
     self.circle_detector = CircleDetector()
     self.processor = FramePreprocessor()
-    pass
 
   def AddFrameAndDetect(self, frame):
+    '''Returns the circle if detected, else None.'''
     frame_thresholded = self.processor.Threshold(frame)
     accumulated_frame = self.processor.Accumulate(frame_thresholded)
     circles = self.circle_detector.DetectCircles(accumulated_frame)

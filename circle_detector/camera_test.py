@@ -1,7 +1,8 @@
 import cv2
 
-# this is /dev/videoX; you can query these with `v4l2-ctl -d /dev/video5 --list-formats`
-WEBCAM_INDEX = 4 # Nick's laptop
+# this is /dev/videoX; you can query these with `for x in $(seq 0 10) ; do echo $x: ; v4l2-ctl -d /dev/video$x --list-formats ; done` and pick the one with the most formats listed
+
+WEBCAM_INDEX = 0 # Nick's laptop
 
 # define a video capture object
 vid = cv2.VideoCapture(WEBCAM_INDEX)
