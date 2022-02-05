@@ -16,3 +16,9 @@ Algorithm overview:
 5) pick the best circle
 6) if the arc length of the inliers on this circle is enough, cast the spell!
 
+Files:
+1) full_test.py is the full monty, live.
+2) camera_test.py tests your webcam HW. Probably want to do this first.
+3) sound_test.py similarly tests your sound HW.
+3) lumos_detector.py is the top-level class that uses the other util classes.
+4) util classes each should have a _test.py, which use test data rather than HW.
