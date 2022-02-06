@@ -6,6 +6,7 @@ class CircleDetector:
     pass
 
   def DetectCircles(self, distilled_image, min_radius=20, max_radius=150):
+    '''Hough circle detection. See openCV docs.'''
     circles = cv.HoughCircles(distilled_image,cv.HOUGH_GRADIENT,1,20,
                                 param1=50,param2=30,minRadius=min_radius,maxRadius=max_radius)
     return circles
@@ -63,12 +64,13 @@ class CircleDetector:
     return arc_length
 
   def CircleScore(self, distilled_image, circle):
-    # TODO: replace with inlier count or similar
     if len(circle) == 4:
       return circle[3]
     score = 0.0
     circle_points = self.CirclePoints(distilled_image.shape[0], distilled_image.shape[1], circle)
     n = len(circle_points)
+    # sum the pixel values lying on the circle
+    # TODO: replace with inlier count or similar
     for (x, y) in circle_points:
       #score += distilled_image[x, y]
       score += distilled_image[y, x]
@@ -76,6 +78,7 @@ class CircleDetector:
     return score
 
   def SelectDominantCircle(self, distilled_image, circles):
+    '''Returns the circle with the best score.'''
     best_score = None
     best_circle = None
     for circle in circles[0,:]:

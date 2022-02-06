@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy as np
 
 class FramePreprocessor:
-  '''Do stuff to frames in preparation for shape matching.'''
+  '''Do stuff to frames in preparation for shape matching. Threshold to binary and squash frame sequence into single frame.'''
   def __init__(self):
     self.accumulated_frame = None
     self.num_frames = 0
@@ -21,5 +21,5 @@ class FramePreprocessor:
       self.accumulated_frame += frame
       np.clip(self.accumulated_frame, 0, 255)
     self.num_frames += 1.0
-    #return np.uint8(np.clip(np.around(self.accumulated_frame / self.num_frames), 0, 255))
-    return np.uint8(np.clip(np.around(self.accumulated_frame), 0, 255))
+    #return np.uint8(np.clip(np.around(self.accumulated_frame / self.num_frames), 0, 255))  # average
+    return np.uint8(np.clip(np.around(self.accumulated_frame), 0, 255))  # sum
