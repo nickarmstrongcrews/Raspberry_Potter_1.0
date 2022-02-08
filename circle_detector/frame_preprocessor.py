@@ -10,7 +10,7 @@ class FramePreprocessor:
   def Threshold(self, frame):
     '''Input color frame, output binary frame. Uses hard-coded threshold.'''
     frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-    ret,frame_binary = cv.threshold(frame_gray,250,255,cv.THRESH_BINARY)
+    ret,frame_binary = cv.threshold(frame_gray,253,255,cv.THRESH_BINARY)
     return frame_binary
 
   def Accumulate(self, frame):

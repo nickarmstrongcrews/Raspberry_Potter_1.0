@@ -57,7 +57,7 @@ class CircleDetector:
     # note: assumes inliers are in order
     for (x, y) in inliers:
       th = np.arctan2(y-y_c, x-x_c)
-      dth = self._angular_distance(last_th-th) if last_th else 0
+      dth = self._angular_distance(last_th, th) if last_th else 0
       last_th = th
       # integrate up to avoid wraparound issues
       arc_length += dth

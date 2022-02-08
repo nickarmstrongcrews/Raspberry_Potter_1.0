@@ -17,8 +17,10 @@ class LumosDetector:
     if np.any(circles):
       dominant_circle = self.circle_detector.SelectDominantCircle(accumulated_frame, circles)
       radius = dominant_circle[2]
-      num_inliers = len(self.circle_detector.CircleInliers(accumulated_frame, dominant_circle))
+      inliers = self.circle_detector.CircleInliers(accumulated_frame, dominant_circle)
+      num_inliers = len(inliers)
       # TODO: use ArcLength instead
-      if num_inliers > 10 / radius:  # circumference of full circle is ~6.28*radius
+      #if num_inliers > 10 / radius:  # circumference of full circle is ~6.28*radius
+      if self.circle_detector.InliersArcLength(dominant_circle, inliers) > 0.75*2*np.pi:
         return dominant_circle
     return None
