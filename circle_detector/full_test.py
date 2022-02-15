@@ -1,7 +1,9 @@
 import cv2 as cv
 import numpy as np
 from playsound import playsound
+import os
 from lumos_detector import LumosDetector
+from spell_effect import SpellEffect
 
 WEBCAM_INDEX = 0 # Nick's laptop; see camera_test.py if not working.
 
@@ -66,7 +68,8 @@ while(True):
     # Display the resulting frame
     cv.imshow('frame', cv.vconcat([img_circle, accumulated_frame_color]))
     if success:
-      playsound('../data/lumos.mp3')
+      effect = SpellEffect()
+      effect.Activate()
       if cv.waitKey(0) & 0xFF == ord('q'):
         break
 
